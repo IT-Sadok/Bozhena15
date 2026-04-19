@@ -34,6 +34,10 @@ public class ConsoleMenuService(
                 case Constants.ConsoleValues.ChangeBookStatusCode:
                     UpdateBookStatus();
                     break;
+                
+                default:
+                    Console.WriteLine("Incorrect operation code.");
+                    break;
             }
             
             ConsoleInstructionsHelper.ShowMenuInstructions();
