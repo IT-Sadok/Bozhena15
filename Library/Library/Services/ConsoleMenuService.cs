@@ -1,4 +1,4 @@
-using Library.Dtos;
+using Library.Models;
 using Library.Entities;
 using Library.Helpers;
 
@@ -47,16 +47,19 @@ public class ConsoleMenuService(
 
     private void ShowAllBooks()
     {
-        var books = _bookService.GetAllBooks();
-        ConsoleInstructionsHelper.ShowRecords(books);
+        var result = _bookService.GetAllBooks();
+        
+        if(!result.IsError)
+            ConsoleInstructionsHelper.ShowRecords(result.Data);
     }
     
     private void SearchBooks()
     {
         var searchFilter = _inputConsoleService.InputFieldText("Search Filter");
-        var filteredBooks = _bookService.GetBooksBySearchText(searchFilter);
+        var result = _bookService.GetBooksBySearchText(searchFilter);
         
-        ConsoleInstructionsHelper.ShowRecords(filteredBooks);
+        if (!result.IsError) 
+            ConsoleInstructionsHelper.ShowRecords(result.Data);
     }
     
     private void CreateBook()

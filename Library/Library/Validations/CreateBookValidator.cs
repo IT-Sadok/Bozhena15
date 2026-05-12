@@ -1,10 +1,10 @@
 using FluentValidation;
-using Library.Dtos;
+using Library.Models;
 using Library.Services;
 
 namespace Library.Validations;
 
-public class CreateBookValidator : AbstractValidator<BookDto>
+public class CreateBookValidator : AbstractValidator<BookModel>
 {
     public CreateBookValidator(
         IBookService bookService)

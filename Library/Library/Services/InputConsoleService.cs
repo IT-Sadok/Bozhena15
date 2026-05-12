@@ -1,4 +1,4 @@
-using Library.Dtos;
+using Library.Models;
 using Library.Entities;
 using Library.Helpers;
 
@@ -6,7 +6,7 @@ namespace Library.Services;
 
 public class InputConsoleService : IInputConsoleService
 {
-    public BookDto InputBookData()
+    public BookModel InputBookData()
         => new()
         {
             Code = InputFieldText("Book Code"),

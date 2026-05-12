@@ -1,16 +1,22 @@
 using System.Text.Json;
 using Library.Entities;
 using Library.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Library.Services;
 
-public class RepositoryService : IRepositoryService
+public class Repository(
+    IFileService fileService,
+    ILogger<Repository> logger) : IRepository
 {
-    public List<T> GetData<T>() where T : BaseEntity
+    private readonly ILogger<Repository> _logger = logger;
+    private readonly IFileService _fileService = fileService;
+    
+    public List<T>? GetData<T>() where T : BaseEntity
     {
         try
         {
-            var content = FileHelper.ReadFileData(typeof(T));
+            var content = _fileService.ReadFileData(typeof(T));
 
             if (string.IsNullOrEmpty(content))
                 return [];
@@ -20,8 +26,13 @@ public class RepositoryService : IRepositoryService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return [];
+            _logger.LogError("{Service}.{Method}: Failed to retrieve data from the file." + 
+                             " Exception: {exception}.",
+                nameof(Repository), 
+                nameof(GetData), 
+                e.Message);
+            
+            return null;
         }
     }
 
@@ -30,6 +41,10 @@ public class RepositoryService : IRepositoryService
         try
         {
             var recordsFromFile = GetData<T>();
+            
+            if(recordsFromFile is null)
+                return false;
+            
             recordsFromFile.AddRange(newRecords);
             
             SaveChanges(recordsFromFile);
@@ -37,7 +52,12 @@ public class RepositoryService : IRepositoryService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            _logger.LogError("{Service}.{Method}: Failed to save data to the file." + 
+                             " Exception: {exception}.",
+                nameof(Repository), 
+                nameof(AddRecords), 
+                e.Message);            
+            
             return false;
         }
     }
@@ -49,6 +69,9 @@ public class RepositoryService : IRepositoryService
             var deletedRecordIds = deletedRecords.Select(x => x.Id).ToList();
             var recordsFromFile = GetData<T>();
             
+            if(recordsFromFile is null)
+                return false;
+            
             recordsFromFile = recordsFromFile
                 .Where(x => !deletedRecordIds.Contains(x.Id)).ToList();
             
@@ -58,7 +81,12 @@ public class RepositoryService : IRepositoryService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            _logger.LogError("{Service}.{Method}: Failed to delete data from the file." + 
+                             " Exception: {exception}.",
+                nameof(Repository), 
+                nameof(DeleteRecords), 
+                e.Message); 
+            
             return false;
         }
     }
@@ -69,6 +97,9 @@ public class RepositoryService : IRepositoryService
         {
             var updatedRecordsIds = updatedRecords.Select(x => x.Id).ToList();
             var recordsFromFile = GetData<T>();
+            
+            if(recordsFromFile is null)
+                return false;
             
             recordsFromFile = recordsFromFile
                 .Where(x => !updatedRecordsIds.Contains(x.Id)).ToList();
@@ -81,9 +112,13 @@ public class RepositoryService : IRepositoryService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            _logger.LogError("{Service}.{Method}: Failed to update data in the file." + 
+                             " Exception: {exception}.",
+                nameof(Repository), 
+                nameof(UpdateRecords), 
+                e.Message);
+
             return false;
-            
         }
     }
     
@@ -91,6 +126,6 @@ public class RepositoryService : IRepositoryService
     {
         var content = JsonSerializer.Serialize(records);
 
-        FileHelper.WriteFileData(typeof(T), content);
+        _fileService.WriteFileData(typeof(T), content);
     }
 }

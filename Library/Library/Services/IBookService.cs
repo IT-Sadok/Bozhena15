@@ -1,14 +1,14 @@
-using Library.Dtos;
+using Library.Models;
 using Library.Entities;
 
 namespace Library.Services;
 
 public interface IBookService
 {
-    List<Book> GetAllBooks();
-    List<Book> GetBooksBySearchText(string searchFilter);
-    ResultDto CreateBook(BookDto bookDto);
-    ResultDto DeleteBook(string bookCode);
-    ResultDto UpdateBookStatus(string bookCode);
-    Book? GetBookByCode(string bookCode);
+    ResultModel<List<Book>> GetAllBooks();
+    ResultModel<List<Book>> GetBooksBySearchText(string searchFilter);
+    ResultModel<Book?> CreateBook(BookModel bookModel);
+    ResultModel<Book?> DeleteBook(string bookCode);
+    ResultModel<Book?> UpdateBookStatus(string bookCode);
+    ResultModel<Book?> GetBookByCode(string bookCode);
 }

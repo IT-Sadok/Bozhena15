@@ -1,9 +1,9 @@
-using Library.Dtos;
+using Library.Models;
 
 namespace Library.Services;
 
 public interface IInputConsoleService
 {
-    BookDto InputBookData();
+    BookModel InputBookData();
     string InputFieldText(string fieldTextName);
 }

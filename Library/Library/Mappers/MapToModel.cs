@@ -1,11 +1,11 @@
-using Library.Dtos;
+using Library.Models;
 using Library.Entities;
 
 namespace Library.Mappers;
 
-public static class BookMapper
+public static class MapToModel
 {
-    public static Book GetBook(BookDto book)
+    public static Book GetBook(BookModel book)
         => new()
         {
             Code = book.Code,

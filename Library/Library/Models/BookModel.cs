@@ -1,8 +1,8 @@
 using Library.Entities;
 
-namespace Library.Dtos;
+namespace Library.Models;
 
-public class BookDto
+public class BookModel
 {
     public required string Code { get; set; }
     public required string Name { get; set; }
