@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <ItemGroup>
+        <ProjectReference Include="..\SmartHouseManagment.AppCore\SmartHouseManagment.AppCore.csproj"/>
+        <ProjectReference Include="..\SmartHouseManagment.Domain\SmartHouseManagment.Domain.csproj"/>
+    </ItemGroup>
+    
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
