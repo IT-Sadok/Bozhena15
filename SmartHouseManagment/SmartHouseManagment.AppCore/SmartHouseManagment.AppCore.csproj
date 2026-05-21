@@ -11,15 +11,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Dtos\" />
-      <Folder Include="Services\" />
-      <Folder Include="UseCases\" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
+      <PackageReference Include="MediatR" Version="12.5.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.16" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.16" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.16" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.3.9" />
     </ItemGroup>
 
 </Project>

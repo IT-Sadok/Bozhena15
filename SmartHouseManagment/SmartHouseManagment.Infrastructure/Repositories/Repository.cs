@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
 
 namespace SmartHouseManagment.Infrastructure.Repositories;

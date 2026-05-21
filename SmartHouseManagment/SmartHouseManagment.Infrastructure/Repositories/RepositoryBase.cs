@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
-using SmartHouseManagment.Infrastructure.Specification;
+using SmartHouseManagment.Domain.Spec;
+using SmartHouseManagment.Infrastructure.Extensions;
 
 namespace SmartHouseManagment.Infrastructure.Repositories;
 
@@ -11,33 +13,64 @@ public abstract class RepositoryBase<TDbContext, TEntity>(
     where TEntity : BaseEntity
     where TDbContext : DbContext
 {
-    public Task<TEntity> FindByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var specResult = GetSpecQuery(context.Set<TEntity>(), spec);
+        
+        return (await specResult.SingleOrDefaultAsync(cancellationToken))!;
     }
 
-    public Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
+    public async Task<List<TEntity>> FindAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var specResult = GetSpecQuery(context.Set<TEntity>(), spec);
+        
+        return await specResult.ToListAsync(cancellationToken);
     }
 
-    public Task<List<TEntity>> FindAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<bool> ExistsAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
+        => (await FindOneAsync(spec, cancellationToken)) is not null;
 
-    public Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
+    public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        await context.Set<TEntity>().AddAsync(entity, cancellationToken);
+        await SaveChangesAsync(cancellationToken);
+        
+        return entity;
     }
 
     public ValueTask DisposeAsync()
     {
         return context.DisposeAsync();
+    }
+
+    private static IQueryable<TEntity> GetSpecQuery(
+        IQueryable<TEntity> inputQuery,
+        ISpecification<TEntity> spec)
+    {
+        var query = inputQuery;
+
+        if (spec.Criterias?.Count > 0)
+        {
+            var exp = spec.Criterias[0];
+
+            for (int i = 1; i < spec.Criterias.Count; i++)
+                exp = exp.And(spec.Criterias[i]);
+            
+            query = query.Where(exp);
+        }
+        
+        return query;
+    }
+
+    private async Task SaveChangesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await context.SaveChangesAsync(cancellationToken);
+        }
+        finally
+        {
+            context.ChangeTracker.Clear();
+        }
     }
 }

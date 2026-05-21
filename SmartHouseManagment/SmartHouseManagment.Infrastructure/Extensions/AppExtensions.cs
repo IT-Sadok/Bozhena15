@@ -1,9 +1,10 @@
-using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
 using SmartHouseManagment.Infrastructure.Repositories;
 
@@ -19,6 +20,7 @@ public static class AppExtensions
     {
         services.AddPostgreSqlDbContext<AppDbContext>(configuration);
         services.AddRepositories();
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
     }
 
     private static void AddPostgreSqlDbContext<T>(
