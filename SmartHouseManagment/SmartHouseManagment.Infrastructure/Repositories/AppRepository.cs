@@ -7,6 +7,5 @@ namespace SmartHouseManagment.Infrastructure.Repositories;
 public class AppRepository<TEntity> : RepositoryBase<AppDbContext, TEntity> 
     where TEntity: BaseEntity 
 {
-    public AppRepository(
-        AppDbContext context) : base(context) { }
+    public AppRepository(AppDbContext context) : base(context) { }
 }

@@ -5,8 +5,7 @@ using SmartHouseManagment.Domain.Entities;
 namespace SmartHouseManagment.Infrastructure.Repositories;
 
 public class Repository(
-    AppDbContext contextDb,
-    ILoggerFactory logger) : IRepository
+    AppDbContext contextDb) : IRepository
 {
     public IRepository<TEntity> Entity<TEntity>() where TEntity : BaseEntity
         => new AppRepository<TEntity>(contextDb);
