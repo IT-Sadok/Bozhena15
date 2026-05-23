@@ -13,8 +13,6 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(
-            typeof(AppDbContext).Assembly,
-            type => type.Namespace?.Contains(nameof(Data.EntityConfiguration)) == true);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Anchor).Assembly);
     }
 }

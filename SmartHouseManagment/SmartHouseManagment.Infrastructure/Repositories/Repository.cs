@@ -9,5 +9,5 @@ public class Repository(
     ILoggerFactory logger) : IRepository
 {
     public IRepository<TEntity> Entity<TEntity>() where TEntity : BaseEntity
-        => new AppRepository<TEntity>(contextDb, logger.CreateLogger<AppRepository<TEntity>>());
+        => new AppRepository<TEntity>(contextDb);
 }

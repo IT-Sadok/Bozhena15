@@ -8,8 +8,7 @@ using SmartHouseManagment.Infrastructure.Extensions;
 namespace SmartHouseManagment.Infrastructure.Repositories;
 
 public abstract class RepositoryBase<TDbContext, TEntity>(
-    TDbContext context,
-    ILogger<RepositoryBase<TDbContext, TEntity>> logger) : IRepository<TEntity>, IAsyncDisposable
+    TDbContext context) : IRepository<TEntity>, IAsyncDisposable
     where TEntity : BaseEntity
     where TDbContext : DbContext
 {
@@ -17,7 +16,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(
     {
         var specResult = GetSpecQuery(context.Set<TEntity>(), spec);
         
-        return (await specResult.SingleOrDefaultAsync(cancellationToken))!;
+        return await specResult.FirstOrDefaultAsync((cancellationToken));
     }
 
     public async Task<List<TEntity>> FindAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)

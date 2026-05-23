@@ -8,7 +8,5 @@ public class AppRepository<TEntity> : RepositoryBase<AppDbContext, TEntity>
     where TEntity: BaseEntity 
 {
     public AppRepository(
-        AppDbContext context,
-        ILogger<AppRepository<TEntity>> logger)
-        : base(context, logger) { }
+        AppDbContext context) : base(context) { }
 }
