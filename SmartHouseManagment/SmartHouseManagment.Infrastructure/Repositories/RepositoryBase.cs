@@ -29,12 +29,9 @@ public abstract class RepositoryBase<TDbContext, TEntity>(
     public async Task<bool> ExistsAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
         => (await FindOneAsync(spec, cancellationToken)) is not null;
 
-    public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken)
+    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
     {
         await context.Set<TEntity>().AddAsync(entity, cancellationToken);
-        await SaveChangesAsync(cancellationToken);
-        
-        return entity;
     }
 
     public ValueTask DisposeAsync()

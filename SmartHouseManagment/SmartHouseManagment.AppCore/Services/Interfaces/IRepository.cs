@@ -8,7 +8,7 @@ public interface IRepository<TEntity> where TEntity : BaseEntity
     Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken);
     Task<List<TEntity>> FindAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken);
-    Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken);
+    Task AddAsync(TEntity entity, CancellationToken cancellationToken);
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }
 
