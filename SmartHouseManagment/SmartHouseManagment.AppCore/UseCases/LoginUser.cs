@@ -29,7 +29,7 @@ public static class LoginUser
             RuleLevelCascadeMode = CascadeMode.Stop;
             
             RuleFor(x => x.User.Email)
-                .MustHaveValidEmail()
+                .EmailAddress()
                 .MustAsync(async (x, ct) =>
                 {
                     user = await repository.Entity<User>().FindOneAsync(new UserByEmailSpec(x), ct);

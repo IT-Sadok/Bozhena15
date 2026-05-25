@@ -25,6 +25,7 @@ public static class RegisterUser
             RuleFor(x => x.User.Email)
                 .NotEmpty()
                 .MaximumLength(50)
+                .EmailAddress()
                 .MustAsync(async (x, ct) =>
                 {
                     var existingUser = await repository.Entity<User>().ExistsAsync(new UserByEmailSpec(x), ct);
@@ -47,7 +48,8 @@ public static class RegisterUser
             var user = request.User.ToEntity(passwordHasher);
             
             await repository.Entity<User>().AddAsync(user, cancellationToken);
-
+            await repository.Entity<User>().SaveChangesAsync(cancellationToken);
+            
             return new ResultModel<User>(user);
         }
     }

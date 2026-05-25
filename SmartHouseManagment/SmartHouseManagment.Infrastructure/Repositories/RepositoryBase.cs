@@ -61,15 +61,8 @@ public abstract class RepositoryBase<TDbContext, TEntity>(
         return query;
     }
 
-    private async Task SaveChangesAsync(CancellationToken cancellationToken)
-    {
-        try
-        {
-            await context.SaveChangesAsync(cancellationToken);
-        }
-        finally
-        {
-            context.ChangeTracker.Clear();
-        }
+    public async Task SaveChangesAsync(CancellationToken cancellationToken)
+    { 
+        await context.SaveChangesAsync(cancellationToken);
     }
 }
