@@ -1,9 +1,8 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace SmartHouseManagment.Domain.Entities;
 
-public class User : BaseEntity
+public class User : IdentityUser, IEntity
 {
-    public required string Name { get; set; }
-    public required string Email { get; set; }
-    public string PasswordHash { get; set; }
-    public required UserRole Role { get; set; }
+    public required DateOnly BirthDate { get; set; }
 }

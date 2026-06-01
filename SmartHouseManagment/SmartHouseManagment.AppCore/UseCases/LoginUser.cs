@@ -2,8 +2,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using SmartHouseManagment.AppCore.Dtos;
-using SmartHouseManagment.AppCore.Extensions;
 using SmartHouseManagment.AppCore.Models;
 using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
@@ -13,62 +11,52 @@ namespace SmartHouseManagment.AppCore.UseCases;
 
 public static class LoginUser
 {
-    public class Command : IRequest<ResultModel<User?>>
+    public class Command : IRequest<ResultModel<string?>>
     {
-        public required LoginUserDto User { get; set; }
+        public required string Email { get; set; }
+        public required string Password { get; set; }
     }
     
     internal class Validator : AbstractValidator<Command>
     {
         public Validator(
-            IRepository repository,
-            IPasswordHasher<User> passwordHasher)
+            UserManager<User> userManager)
         {
             User? user = null;
             
             RuleLevelCascadeMode = CascadeMode.Stop;
             
-            RuleFor(x => x.User.Email)
+            RuleFor(x => x.Email)
                 .EmailAddress()
                 .MustAsync(async (x, ct) =>
                 {
-                    user = await repository.Entity<User>().FindOneAsync(new UserByEmailSpec(x), ct);
+                    user = await userManager.FindByEmailAsync(x);
                     return user is not null;
                 })
                 .WithMessage("The user does not exist.");
             
-            RuleFor(x => x.User.Password)
-                .Must(x =>
+            RuleFor(x => x.Password)
+                .MustAsync(async (x, ct) =>
                 {
                     if (user is null) 
                         return false;
-                    
-                    return passwordHasher.VerifyHashedPassword(user!, user!.PasswordHash, x) != PasswordVerificationResult.Failed;
+
+                    return await userManager.CheckPasswordAsync(user, x);
                 })
                 .WithMessage("Incorrect password.");
         }
     }
     
     internal class Handler(
-        IRepository repository,
-        ILogger<Handler> logger) : IRequestHandler<Command, ResultModel<User?>>
+        IAuthService authService) : IRequestHandler<Command, ResultModel<string?>>
     {
-        public async Task<ResultModel<User?>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<ResultModel<string?>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = await repository.Entity<User>().FindOneAsync(
-                new UserByEmailSpec(request.User.Email), cancellationToken);
-
-            if (user is null)
-            {
-                logger.LogWarning("{Service}:{Method}: Requested user not found - {email}", 
-                    nameof(Handler), 
-                    nameof(Handle), 
-                    request.User.Email);
-                
-                return new ResultModel<User?>(Data: null, Errors: ["User not found"], IsError: true);
-            }
-
-            return new ResultModel<User?>(user);
+            var userToken = await authService.LoginUser(request.Email, request.Password);
+            
+            return !string.IsNullOrEmpty(userToken)
+                ? new ResultModel<string?>(userToken)
+                : new ResultModel<string?>(Data: null, Errors: ["User not found."], IsError: true);
         }
     }
 }

@@ -1,3 +1,4 @@
+using SmartHouseManagment.Api.Extensions;
 using SmartHouseManagment.Api.Middleware;
 using SmartHouseManagment.Infrastructure.Extensions;
 
@@ -7,13 +8,5 @@ builder.Services.AddScoped<ExceptionHandlingMiddleware>();
     
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseHttpsRedirection();
-app.MapControllers();
+await app.AddAppServices();
 app.Run();

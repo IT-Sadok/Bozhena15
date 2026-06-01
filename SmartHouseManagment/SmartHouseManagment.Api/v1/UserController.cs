@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartHouseManagment.AppCore.Dtos;
 using SmartHouseManagment.AppCore.UseCases;
 
 namespace SmartHouseManagment.Api.v1;
@@ -8,6 +8,7 @@ namespace SmartHouseManagment.Api.v1;
 [Route("api/v1/User")]
 public class UserController: BaseController
 {
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult> RegisterUser(
         [FromBody] RegisterUser.Command request,
@@ -16,10 +17,11 @@ public class UserController: BaseController
         var result = await Mediator.Send(request, cancellationToken);
         
         return result.IsError
-            ? BadRequest(result.Errors)
-            : Ok(result.Data);
+            ? BadRequest(result)
+            : Ok(result);
     }
     
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult> LoginUser(
         [FromBody] LoginUser.Command request,
@@ -28,7 +30,7 @@ public class UserController: BaseController
         var result = await Mediator.Send(request, cancellationToken);
         
         return result.IsError
-            ? BadRequest(result.Errors)
-            : Ok(result.Data);
+            ? BadRequest(result)
+            : Ok(result);
     }
 }

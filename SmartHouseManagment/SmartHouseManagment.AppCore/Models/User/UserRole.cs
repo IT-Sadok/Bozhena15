@@ -1,12 +1,12 @@
 using System.ComponentModel;
 
-namespace SmartHouseManagment.Domain.Entities;
+namespace SmartHouseManagment.AppCore.Models.User;
 
 public enum UserRole
 {
     [Description("User")]
-    User,
+    User = 0,
     
     [Description("Admin")]
-    Admin,
+    Admin
 }

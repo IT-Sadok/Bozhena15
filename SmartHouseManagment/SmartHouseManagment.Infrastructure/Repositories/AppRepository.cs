@@ -5,7 +5,7 @@ using SmartHouseManagment.Domain.Entities;
 namespace SmartHouseManagment.Infrastructure.Repositories;
 
 public class AppRepository<TEntity> : RepositoryBase<AppDbContext, TEntity> 
-    where TEntity: BaseEntity 
+    where TEntity: class, IEntity 
 {
     public AppRepository(AppDbContext context) : base(context) { }
 }

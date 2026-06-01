@@ -9,7 +9,7 @@ namespace SmartHouseManagment.Infrastructure.Repositories;
 
 public abstract class RepositoryBase<TDbContext, TEntity>(
     TDbContext context) : IRepository<TEntity>, IAsyncDisposable
-    where TEntity : BaseEntity
+    where TEntity : class, IEntity
     where TDbContext : DbContext
 {
     public async Task<TEntity> FindOneAsync(ISpecification<TEntity> spec, CancellationToken cancellationToken)
