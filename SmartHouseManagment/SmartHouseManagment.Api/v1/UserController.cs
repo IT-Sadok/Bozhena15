@@ -10,27 +10,23 @@ public class UserController: BaseController
 {
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult> RegisterUser(
+    public async Task<IActionResult> RegisterUser(
         [FromBody] RegisterUser.Command request,
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(request, cancellationToken);
         
-        return result.IsError
-            ? BadRequest(result)
-            : Ok(result);
+        return HandleResult(result);
     }
     
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult> LoginUser(
+    public async Task<IActionResult> LoginUser(
         [FromBody] LoginUser.Command request,
         CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(request, cancellationToken);
         
-        return result.IsError
-            ? BadRequest(result)
-            : Ok(result);
+        return HandleResult(result);
     }
 }

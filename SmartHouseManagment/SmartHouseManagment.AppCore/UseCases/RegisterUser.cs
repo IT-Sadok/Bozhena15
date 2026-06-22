@@ -10,7 +10,7 @@ namespace SmartHouseManagment.AppCore.UseCases;
 
 public static class RegisterUser
 {
-    public class Command : IRequest<ResultModel<string?>>
+    public class Command : IRequest<ResultModel<string>>
     {
         public required RegisterUserModel User { get; set; }
     }
@@ -60,15 +60,9 @@ public static class RegisterUser
     }
     
     internal class Handler(
-        IAuthService authService) : IRequestHandler<Command, ResultModel<string?>>
+        IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
     {
-        public async Task<ResultModel<string?>> Handle(Command request, CancellationToken cancellationToken)
-        {
-            var userToken = await authService.RegisterUser(request.User);
-            
-            return userToken is not null
-                ? new ResultModel<string?>(userToken)
-                : new ResultModel<string?>(null, Errors: ["Failed to register user."], IsError: true);
-        }
+        public async Task<ResultModel<string>> Handle(Command request, CancellationToken cancellationToken)
+            => await authService.RegisterUserAsync(request.User);
     }
 }

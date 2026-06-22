@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SmartHouseManagment.AppCore.Extensions;
 using SmartHouseManagment.AppCore.Extensions.Mapper;
+using SmartHouseManagment.AppCore.Models;
 using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
@@ -14,7 +15,7 @@ public class AuthService(
     ITokenService tokenService,
     ILogger<AuthService> logger) : IAuthService
 {
-    public async Task<string?> RegisterUser(RegisterUserModel registerUser)
+    public async Task<ResultModel<string>> RegisterUserAsync(RegisterUserModel registerUser)
     {
         var user = registerUser.ToEntity();
 
@@ -24,10 +25,10 @@ public class AuthService(
         {
             logger.LogError("{Service}: {Method}: Failed to register user - {email}.",
                 nameof(AuthService),
-                nameof(RegisterUser),
+                nameof(RegisterUserAsync),
                 user.Email);
             
-            return null;
+            return Constants.Errors.UserRegisterFailed;
         } 
         
         var claims = GetClaims(user, UserRole.User);
@@ -38,7 +39,7 @@ public class AuthService(
         return tokenService.GenerateToken(user, claims);
     }
 
-    public async Task<string?> LoginUser(string email, string password)
+    public async Task<ResultModel<string>> LoginUserAsync(string email, string password)
     {
         var user = await userManager.FindByEmailAsync(email);
         
@@ -46,10 +47,10 @@ public class AuthService(
         {
             logger.LogError("{Service}:{Method}: User not found - {email}.",
                 nameof(AuthService), 
-                nameof(LoginUser), 
+                nameof(LoginUserAsync), 
                 email);
             
-            return null;
+            return Constants.Errors.UserNotFound;
         }
 
         var isValidPassword = await userManager.CheckPasswordAsync(user, password);
@@ -58,10 +59,10 @@ public class AuthService(
         {
             logger.LogError("{Service}: {Method}: Password is incorrect - {email}.",
                 nameof(AuthService),
-                nameof(LoginUser),
+                nameof(LoginUserAsync),
                 email);
             
-            return null;
+            return Constants.Errors.InvalidPassword;
         }        
         
         var claims = await userManager.GetClaimsAsync(user);
@@ -73,8 +74,8 @@ public class AuthService(
         =>
         [
             new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Name, user.UserName),
-            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Name, user.UserName ?? string.Empty),
+            new(ClaimTypes.Email, user.Email ?? string.Empty),
             new(ClaimTypes.Role, role.ToEnumDescription())
         ];
 }

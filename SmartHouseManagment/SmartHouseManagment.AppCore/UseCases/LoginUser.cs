@@ -11,7 +11,7 @@ namespace SmartHouseManagment.AppCore.UseCases;
 
 public static class LoginUser
 {
-    public class Command : IRequest<ResultModel<string?>>
+    public class Command : IRequest<ResultModel<string>>
     {
         public required string Email { get; set; }
         public required string Password { get; set; }
@@ -48,15 +48,9 @@ public static class LoginUser
     }
     
     internal class Handler(
-        IAuthService authService) : IRequestHandler<Command, ResultModel<string?>>
+        IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
     {
-        public async Task<ResultModel<string?>> Handle(Command request, CancellationToken cancellationToken)
-        {
-            var userToken = await authService.LoginUser(request.Email, request.Password);
-            
-            return !string.IsNullOrEmpty(userToken)
-                ? new ResultModel<string?>(userToken)
-                : new ResultModel<string?>(Data: null, Errors: ["User not found."], IsError: true);
-        }
+        public async Task<ResultModel<string>> Handle(Command request, CancellationToken cancellationToken)
+            => await authService.LoginUserAsync(request.Email, request.Password);
     }
 }
