@@ -1,6 +1,5 @@
 using System.Text;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using SmartHouseManagment.AppCore.Behaviors;
+using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Services;
 using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
@@ -27,9 +27,7 @@ public static class ServiceExtensions
         IConfiguration configuration)
     {
         services.AddControllers();
-        services
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AppCoreAnchor).Assembly))
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddMediatR();
         
         services.AddFluentValidators();
         
@@ -128,5 +126,48 @@ public static class ServiceExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();
+    }
+
+    private static IServiceCollection AddMediatR(
+         this IServiceCollection services)
+    {
+        var handlerAssembly = typeof(AppCoreAnchor).Assembly;
+
+        var handlerType = typeof(IRequestHandler<,>);
+        var handlers = handlerAssembly.GetTypes()
+            .Where(t => t.GetInterfaces().Any(i =>
+                i.IsGenericType &&
+                i.GetGenericTypeDefinition() == handlerType))
+            .ToList();
+
+        foreach (var handler in handlers)
+        {
+            var interfaces = handler.GetInterfaces();
+            foreach (var i in interfaces)
+            {
+                services.AddScoped(i, handler);
+            }
+        }
+
+        //var behaviorType = typeof(IPipelineBehavior<,>);
+        //var behaviors = handlerAssembly.GetTypes()
+        //    .Where(t => t.GetInterfaces().Any(i =>
+        //        i.IsGenericType &&
+        //        i.GetGenericTypeDefinition() == behaviorType))
+        //    .ToList();
+
+        //foreach (var behavior in behaviors)
+        //{
+        //    var interfaces = behavior.GetInterfaces();
+        //    foreach (var i in interfaces)
+        //    {
+        //        services.AddScoped(i, behavior);
+        //    }
+        //}
+
+        services.AddScoped<IMediator, Mediator>();
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        return services;
     }
 }

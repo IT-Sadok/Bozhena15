@@ -1,14 +1,13 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Models;
 
 namespace SmartHouseManagment.Api.v1;
 
-public abstract class BaseController : ControllerBase
+public abstract class BaseController(
+    IMediator mediator) : ControllerBase
 {
-    private ISender _mediator;
-    
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
+    protected IMediator Mediator { get; init; } = mediator;
 
     protected IActionResult HandleResult(ResultModel result)
     {

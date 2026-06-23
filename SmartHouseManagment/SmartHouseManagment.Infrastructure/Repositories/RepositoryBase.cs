@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SmartHouseManagment.AppCore.Services.Interfaces;
+using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.Domain.Entities;
 using SmartHouseManagment.Domain.Spec;
 using SmartHouseManagment.Infrastructure.Extensions;

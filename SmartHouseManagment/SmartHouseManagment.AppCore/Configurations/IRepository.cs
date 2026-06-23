@@ -1,7 +1,7 @@
 using SmartHouseManagment.Domain.Entities;
 using SmartHouseManagment.Domain.Spec;
 
-namespace SmartHouseManagment.AppCore.Services.Interfaces;
+namespace SmartHouseManagment.AppCore.Configurations;
 
 public interface IRepository<TEntity> where TEntity : class, IEntity
 {

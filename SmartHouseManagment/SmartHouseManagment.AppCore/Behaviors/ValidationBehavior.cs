@@ -1,5 +1,5 @@
 using FluentValidation;
-using MediatR;
+using SmartHouseManagment.AppCore.Configurations;
 
 namespace SmartHouseManagment.AppCore.Behaviors;
 
@@ -8,7 +8,7 @@ public class ValidationBehavior<TRequest, TResponse>(
     where TRequest : notnull, IRequest<TResponse>
     where TResponse : notnull
 {
-    public async Task<TResponse> Handle(
+    public async Task<TResponse> HandleAsync(
         TRequest request, 
         RequestHandlerDelegate<TResponse> next, 
         CancellationToken cancellationToken)

@@ -1,11 +1,9 @@
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
+using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Models;
 using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
-using SmartHouseManagment.Domain.Spec.User;
 
 namespace SmartHouseManagment.AppCore.UseCases;
 
@@ -50,7 +48,7 @@ public static class LoginUser
     internal class Handler(
         IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
     {
-        public async Task<ResultModel<string>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<ResultModel<string>> HandleAsync(Command request, CancellationToken cancellationToken)
             => await authService.LoginUserAsync(request.Email, request.Password);
     }
 }
