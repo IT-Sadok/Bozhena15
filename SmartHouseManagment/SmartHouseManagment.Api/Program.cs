@@ -4,8 +4,8 @@ using SmartHouseManagment.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCoreServices(builder.Configuration);
-builder.Services.AddScoped<ExceptionHandlingMiddleware>();
-    
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+
 var app = builder.Build();
 
 await app.AddAppServices();

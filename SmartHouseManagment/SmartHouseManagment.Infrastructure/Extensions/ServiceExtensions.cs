@@ -27,6 +27,8 @@ public static class ServiceExtensions
         IConfiguration configuration)
     {
         services.AddControllers();
+        services.AddProblemDetails();
+
         services.AddMediatR();
         
         services.AddFluentValidators();
@@ -148,22 +150,6 @@ public static class ServiceExtensions
                 services.AddScoped(i, handler);
             }
         }
-
-        //var behaviorType = typeof(IPipelineBehavior<,>);
-        //var behaviors = handlerAssembly.GetTypes()
-        //    .Where(t => t.GetInterfaces().Any(i =>
-        //        i.IsGenericType &&
-        //        i.GetGenericTypeDefinition() == behaviorType))
-        //    .ToList();
-
-        //foreach (var behavior in behaviors)
-        //{
-        //    var interfaces = behavior.GetInterfaces();
-        //    foreach (var i in interfaces)
-        //    {
-        //        services.AddScoped(i, behavior);
-        //    }
-        //}
 
         services.AddScoped<IMediator, Mediator>();
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

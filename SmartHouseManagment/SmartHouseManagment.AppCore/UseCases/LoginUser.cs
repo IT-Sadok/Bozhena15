@@ -34,13 +34,8 @@ public static class LoginUser
                 .WithMessage("The user does not exist.");
             
             RuleFor(x => x.Password)
-                .MustAsync(async (x, ct) =>
-                {
-                    if (user is null) 
-                        return false;
-
-                    return await userManager.CheckPasswordAsync(user, x);
-                })
+                .MustAsync(async (x, ct) => await userManager.CheckPasswordAsync(user!, x))
+                .When(_ => user is not null)
                 .WithMessage("Incorrect password.");
         }
     }

@@ -17,7 +17,7 @@ public static class AppExtensions
             app.UseSwaggerUI();
         }
 
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.UseExceptionHandler();
         app.UseHttpsRedirection();
         app.UseRouting();
         
