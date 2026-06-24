@@ -63,6 +63,6 @@ public static class RegisterUser
         IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
     {
         public async Task<ResultModel<string>> HandleAsync(Command request, CancellationToken cancellationToken)
-            => await authService.RegisterUserAsync(request.User);
+            => await authService.RegisterUserAsync(request.User, cancellationToken);
     }
 }

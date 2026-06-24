@@ -5,6 +5,6 @@ namespace SmartHouseManagment.AppCore.Services.Interfaces;
 
 public interface IAuthService
 {
-    Task<ResultModel<string>> RegisterUserAsync(RegisterUserModel user);
-    Task<ResultModel<string>> LoginUserAsync(string email, string password);
+    Task<ResultModel<string>> RegisterUserAsync(RegisterUserModel registerUser, CancellationToken cancellationToken);
+    Task<ResultModel<string>> LoginUserAsync(LoginUserModel loginUser, CancellationToken cancellationToken);
 }

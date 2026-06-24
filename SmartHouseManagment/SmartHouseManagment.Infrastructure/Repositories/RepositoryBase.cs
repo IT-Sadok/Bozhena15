@@ -57,9 +57,4 @@ public abstract class RepositoryBase<TDbContext, TEntity>(
         
         return query;
     }
-
-    public async Task SaveChangesAsync(CancellationToken cancellationToken)
-    { 
-        await context.SaveChangesAsync(cancellationToken);
-    }
 }

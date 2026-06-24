@@ -105,7 +105,7 @@ public static class ServiceExtensions
             services.AddScoped(typeof(AppRepository<>).MakeGenericType(entityInfo));
         }
         
-        services.AddScoped<IRepository, Repository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     private static void AddFluentValidators(

@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Models;
+using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.Services.Interfaces;
 using SmartHouseManagment.Domain.Entities;
 
@@ -11,8 +12,7 @@ public static class LoginUser
 {
     public class Command : IRequest<ResultModel<string>>
     {
-        public required string Email { get; set; }
-        public required string Password { get; set; }
+        public required LoginUserModel User { get; set; }
     }
     
     internal class Validator : AbstractValidator<Command>
@@ -24,7 +24,7 @@ public static class LoginUser
             
             RuleLevelCascadeMode = CascadeMode.Stop;
             
-            RuleFor(x => x.Email)
+            RuleFor(x => x.User.Email)
                 .EmailAddress()
                 .MustAsync(async (x, ct) =>
                 {
@@ -33,7 +33,7 @@ public static class LoginUser
                 })
                 .WithMessage("The user does not exist.");
             
-            RuleFor(x => x.Password)
+            RuleFor(x => x.User.Password)
                 .MustAsync(async (x, ct) => await userManager.CheckPasswordAsync(user!, x))
                 .When(_ => user is not null)
                 .WithMessage("Incorrect password.");
@@ -44,6 +44,6 @@ public static class LoginUser
         IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
     {
         public async Task<ResultModel<string>> HandleAsync(Command request, CancellationToken cancellationToken)
-            => await authService.LoginUserAsync(request.Email, request.Password);
+            => await authService.LoginUserAsync(request.User, cancellationToken);
     }
 }

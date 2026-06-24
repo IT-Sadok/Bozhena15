@@ -15,7 +15,9 @@ public class AuthService(
     ITokenService tokenService,
     ILogger<AuthService> logger) : IAuthService
 {
-    public async Task<ResultModel<string>> RegisterUserAsync(RegisterUserModel registerUser)
+    public async Task<ResultModel<string>> RegisterUserAsync(
+        RegisterUserModel registerUser, 
+        CancellationToken cancellationToken)
     {
         var user = registerUser.ToEntity();
 
@@ -39,28 +41,30 @@ public class AuthService(
         return tokenService.GenerateToken(user, claims);
     }
 
-    public async Task<ResultModel<string>> LoginUserAsync(string email, string password)
+    public async Task<ResultModel<string>> LoginUserAsync(
+        LoginUserModel loginUser,
+        CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(loginUser.Email);
         
         if(user is null)
         {
             logger.LogError("{Service}:{Method}: User not found - {email}.",
                 nameof(AuthService), 
-                nameof(LoginUserAsync), 
-                email);
+                nameof(LoginUserAsync),
+                loginUser.Email);
             
             return Constants.Errors.UserNotFound;
         }
 
-        var isValidPassword = await userManager.CheckPasswordAsync(user, password);
+        var isValidPassword = await userManager.CheckPasswordAsync(user, loginUser.Password);
 
         if (!isValidPassword)
         {
             logger.LogError("{Service}: {Method}: Password is incorrect - {email}.",
                 nameof(AuthService),
                 nameof(LoginUserAsync),
-                email);
+                loginUser.Email);
             
             return Constants.Errors.InvalidPassword;
         }        
