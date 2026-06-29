@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using SmartHouseManagment.Api.Middleware;
+using SmartHouseManagment.Api.v1;
 using SmartHouseManagment.AppCore.Extensions;
 using SmartHouseManagment.AppCore.Models.User;
 
@@ -43,5 +44,13 @@ public static class AppExtensions
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
         }
+    }
+
+    public static void MapV1Groups(this RouteGroupBuilder app)
+    {
+        var apiV1 = app.MapGroup("/v1");
+
+        apiV1.MapGroup("/users")
+            .MapUserEndpoints();
     }
 }

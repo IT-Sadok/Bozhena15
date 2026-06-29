@@ -9,3 +9,8 @@ public interface IRequestHandler<in TRequest, TResponse>
 {
     Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
 }
+
+public interface IRequestHandler<TResponse>
+{
+    Task<TResponse> HandleAsync(IRequest<TResponse> request, CancellationToken ct);
+}

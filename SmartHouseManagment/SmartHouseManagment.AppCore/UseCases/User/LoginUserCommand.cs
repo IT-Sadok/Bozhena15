@@ -4,13 +4,13 @@ using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Models;
 using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.Services.Interfaces;
-using SmartHouseManagment.Domain.Entities;
+using UserEntity =  SmartHouseManagment.Domain.Entities.User;
 
-namespace SmartHouseManagment.AppCore.UseCases;
+namespace SmartHouseManagment.AppCore.UseCases.User;
 
-public static class LoginUser
+public static class LoginUserCommand
 {
-    public class Command : IRequest<ResultModel<string>>
+    public class Command : IRequest<ResultModel<LoginUserResponse>>
     {
         public required LoginUserModel User { get; set; }
     }
@@ -18,9 +18,9 @@ public static class LoginUser
     internal class Validator : AbstractValidator<Command>
     {
         public Validator(
-            UserManager<User> userManager)
+            UserManager<UserEntity> userManager)
         {
-            User? user = null;
+            UserEntity? user = null;
             
             RuleLevelCascadeMode = CascadeMode.Stop;
             
@@ -40,10 +40,10 @@ public static class LoginUser
         }
     }
     
-    internal class Handler(
-        IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
+    public class Handler(
+        IAuthService authService) : IRequestHandler<Command, ResultModel<LoginUserResponse>>
     {
-        public async Task<ResultModel<string>> HandleAsync(Command request, CancellationToken cancellationToken)
+        public async Task<ResultModel<LoginUserResponse>> HandleAsync(Command request, CancellationToken cancellationToken)
             => await authService.LoginUserAsync(request.User, cancellationToken);
     }
 }

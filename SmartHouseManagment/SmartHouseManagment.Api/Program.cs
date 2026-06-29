@@ -9,4 +9,8 @@ builder.Services.AddExceptionHandler<ExceptionHandler>();
 var app = builder.Build();
 
 await app.AddAppServices();
+
+var apiGroup = app.MapGroup("/api");
+apiGroup.MapV1Groups();
+
 app.Run();

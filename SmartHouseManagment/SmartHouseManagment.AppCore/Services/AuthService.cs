@@ -15,7 +15,7 @@ public class AuthService(
     ITokenService tokenService,
     ILogger<AuthService> logger) : IAuthService
 {
-    public async Task<ResultModel<string>> RegisterUserAsync(
+    public async Task<ResultModel<RegisterUserResponse>> RegisterUserAsync(
         RegisterUserModel registerUser, 
         CancellationToken cancellationToken)
     {
@@ -38,10 +38,10 @@ public class AuthService(
         await userManager.AddToRoleAsync(user, UserRole.User.ToEnumDescription());
         await userManager.AddClaimsAsync(user, claims);
         
-        return tokenService.GenerateToken(user, claims);
+        return new RegisterUserResponse { Token = tokenService.GenerateToken(user, claims) };
     }
 
-    public async Task<ResultModel<string>> LoginUserAsync(
+    public async Task<ResultModel<LoginUserResponse>> LoginUserAsync(
         LoginUserModel loginUser,
         CancellationToken cancellationToken)
     {
@@ -71,7 +71,7 @@ public class AuthService(
         
         var claims = await userManager.GetClaimsAsync(user);
         
-        return tokenService.GenerateToken(user, claims);       
+        return new LoginUserResponse { Token = tokenService.GenerateToken(user, claims) };       
     }
     
     private static List<Claim> GetClaims(User user, UserRole role)

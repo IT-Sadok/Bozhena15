@@ -4,13 +4,13 @@ using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Models;
 using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.Services.Interfaces;
-using SmartHouseManagment.Domain.Entities;
+using UserEntity = SmartHouseManagment.Domain.Entities.User;
 
-namespace SmartHouseManagment.AppCore.UseCases;
+namespace SmartHouseManagment.AppCore.UseCases.User;
 
-public static class RegisterUser
+public static class RegisterUserCommand
 {
-    public class Command : IRequest<ResultModel<string>>
+    public class Command : IRequest<ResultModel<RegisterUserResponse>>
     {
         public required RegisterUserModel User { get; set; }
     }
@@ -18,7 +18,7 @@ public static class RegisterUser
     internal class Validator : AbstractValidator<Command>
     {
         public Validator(
-            UserManager<User> userManager)
+            UserManager<UserEntity> userManager)
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
             
@@ -59,10 +59,10 @@ public static class RegisterUser
         }
     }
     
-    internal class Handler(
-        IAuthService authService) : IRequestHandler<Command, ResultModel<string>>
+    public class Handler(
+        IAuthService authService) : IRequestHandler<Command, ResultModel<RegisterUserResponse>>
     {
-        public async Task<ResultModel<string>> HandleAsync(Command request, CancellationToken cancellationToken)
+        public async Task<ResultModel<RegisterUserResponse>> HandleAsync(Command request, CancellationToken cancellationToken)
             => await authService.RegisterUserAsync(request.User, cancellationToken);
     }
 }

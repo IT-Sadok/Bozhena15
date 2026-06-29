@@ -1,4 +1,3 @@
-using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,10 +9,14 @@ using Microsoft.IdentityModel.Tokens;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using SmartHouseManagment.AppCore.Behaviors;
 using SmartHouseManagment.AppCore.Configurations;
+using SmartHouseManagment.AppCore.Models;
+using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.Services;
 using SmartHouseManagment.AppCore.Services.Interfaces;
+using SmartHouseManagment.AppCore.UseCases.User;
 using SmartHouseManagment.Domain.Entities;
 using SmartHouseManagment.Infrastructure.Repositories;
+using System.Text;
 using AppCoreAnchor = SmartHouseManagment.AppCore.Anchor;
 
 namespace SmartHouseManagment.Infrastructure.Extensions;
@@ -133,26 +136,16 @@ public static class ServiceExtensions
     private static IServiceCollection AddMediatR(
          this IServiceCollection services)
     {
-        var handlerAssembly = typeof(AppCoreAnchor).Assembly;
-
-        var handlerType = typeof(IRequestHandler<,>);
-        var handlers = handlerAssembly.GetTypes()
-            .Where(t => t.GetInterfaces().Any(i =>
-                i.IsGenericType &&
-                i.GetGenericTypeDefinition() == handlerType))
-            .ToList();
-
-        foreach (var handler in handlers)
-        {
-            var interfaces = handler.GetInterfaces();
-            foreach (var i in interfaces)
-            {
-                services.AddScoped(i, handler);
-            }
-        }
-
         services.AddScoped<IMediator, Mediator>();
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        services.AddScoped<IRequestHandler<RegisterUserCommand.Command, ResultModel<RegisterUserResponse>>, RegisterUserCommand.Handler>();
+        services.AddScoped<IRequestHandler<LoginUserCommand.Command, ResultModel<LoginUserResponse>>, LoginUserCommand.Handler>();
+
+        services.AddScoped<IRequestHandler<ResultModel<RegisterUserResponse>>,
+            PipelineBehaviorWrapper<RegisterUserCommand.Command, ResultModel<RegisterUserResponse>>>();
+        services.AddScoped<IRequestHandler<ResultModel<LoginUserResponse>>,
+            PipelineBehaviorWrapper<LoginUserCommand.Command, ResultModel<LoginUserResponse>>>();
 
         return services;
     }
