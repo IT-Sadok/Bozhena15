@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHouseManagment.Api", "SmartHouseManagment.Api\SmartHouseManagment.Api.csproj", "{4C42823D-8B1D-410B-AE76-6BF5446952FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4} = {81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}
+		{3DC42B9F-05FB-493B-81E3-783F36BE662F} = {3DC42B9F-05FB-493B-81E3-783F36BE662F}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHouseManagment.Domain", "SmartHouseManagment.Domain\SmartHouseManagment.Domain.csproj", "{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHouseManagment.AppCore", "SmartHouseManagment.AppCore\SmartHouseManagment.AppCore.csproj", "{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6} = {1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHouseManagment.Infrastructure", "SmartHouseManagment.Infrastructure\SmartHouseManagment.Infrastructure.csproj", "{3DC42B9F-05FB-493B-81E3-783F36BE662F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4} = {81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}
+		{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6} = {1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C42823D-8B1D-410B-AE76-6BF5446952FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C42823D-8B1D-410B-AE76-6BF5446952FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C42823D-8B1D-410B-AE76-6BF5446952FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C42823D-8B1D-410B-AE76-6BF5446952FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DBCC5DA-2E6B-4AB7-9E7F-28F21CA327D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81A1F99E-ADB0-47BE-8AF2-A7916D6154F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC42B9F-05FB-493B-81E3-783F36BE662F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC42B9F-05FB-493B-81E3-783F36BE662F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC42B9F-05FB-493B-81E3-783F36BE662F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC42B9F-05FB-493B-81E3-783F36BE662F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
