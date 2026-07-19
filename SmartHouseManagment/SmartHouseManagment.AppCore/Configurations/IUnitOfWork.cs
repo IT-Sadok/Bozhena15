@@ -14,5 +14,5 @@ public interface IRepository<TEntity> where TEntity : class, IEntity
 public interface IUnitOfWork
 {
     public IRepository<TEntity> Entity<TEntity>() where TEntity : class, IEntity;
-    Task SaveChangesAsync(CancellationToken cancellationToken);
+    Task<bool> SaveChangesAsync(CancellationToken cancellationToken);
 }

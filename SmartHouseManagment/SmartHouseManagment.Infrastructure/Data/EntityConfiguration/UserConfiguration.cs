@@ -8,7 +8,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("Users");
+        builder
+            .ToTable("Users");
         
         builder
             .HasKey(x => x.Id);
@@ -26,5 +27,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder
             .HasIndex(x => x.Email)
             .IsUnique();
+
+        builder
+            .HasMany(x => x.HouseUsers)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

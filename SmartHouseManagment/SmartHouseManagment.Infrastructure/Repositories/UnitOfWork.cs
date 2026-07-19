@@ -1,16 +1,28 @@
+using Microsoft.Extensions.Logging;
 using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.Domain.Entities;
 
 namespace SmartHouseManagment.Infrastructure.Repositories;
 
 public class UnitOfWork(
-    AppDbContext contextDb) : IUnitOfWork
+    AppDbContext contextDb,
+    ILogger<UnitOfWork> logger) : IUnitOfWork
 {
     public IRepository<TEntity> Entity<TEntity>() where TEntity : class, IEntity
         => new AppRepository<TEntity>(contextDb);
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken)
+    public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        await contextDb.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await contextDb.SaveChangesAsync(cancellationToken);
+            return true;
+
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while saving changes.");
+            return false;   
+        }
     }
 }

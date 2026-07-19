@@ -33,9 +33,9 @@ public class AuthService(
             return Constants.Errors.UserRegisterFailed;
         } 
         
-        var claims = GetClaims(user, UserRole.User);
+        var claims = GetClaims(user, registerUser.Role);
         
-        await userManager.AddToRoleAsync(user, UserRole.User.ToEnumDescription());
+        await userManager.AddToRoleAsync(user, registerUser.Role.ToEnumDescription());
         await userManager.AddClaimsAsync(user, claims);
         
         return new RegisterUserResponse { Token = tokenService.GenerateToken(user, claims) };
@@ -77,7 +77,7 @@ public class AuthService(
     private static List<Claim> GetClaims(User user, UserRole role)
         =>
         [
-            new(ClaimTypes.NameIdentifier, user.Id),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName ?? string.Empty),
             new(ClaimTypes.Email, user.Email ?? string.Empty),
             new(ClaimTypes.Role, role.ToEnumDescription())

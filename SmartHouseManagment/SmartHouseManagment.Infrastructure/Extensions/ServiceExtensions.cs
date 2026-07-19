@@ -10,6 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 using SmartHouseManagment.AppCore.Behaviors;
 using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Models;
+using SmartHouseManagment.AppCore.Models.House;
 using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.Services;
 using SmartHouseManagment.AppCore.Services.Interfaces;
@@ -61,7 +62,7 @@ public static class ServiceExtensions
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = false;
             })
-            .AddRoles<IdentityRole>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
         
@@ -131,6 +132,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IHouseManagementService, HouseManagementService>();
     }
 
     private static IServiceCollection AddMediatR(
@@ -142,10 +144,15 @@ public static class ServiceExtensions
         services.AddScoped<IRequestHandler<RegisterUserCommand.Command, ResultModel<RegisterUserResponse>>, RegisterUserCommand.Handler>();
         services.AddScoped<IRequestHandler<LoginUserCommand.Command, ResultModel<LoginUserResponse>>, LoginUserCommand.Handler>();
 
+        services.AddScoped<IRequestHandler<CreateHouseCommand.Command, ResultModel<CreateHouseResponse>>, CreateHouseCommand.Handler>();
+
         services.AddScoped<IRequestHandler<ResultModel<RegisterUserResponse>>,
             PipelineBehaviorWrapper<RegisterUserCommand.Command, ResultModel<RegisterUserResponse>>>();
         services.AddScoped<IRequestHandler<ResultModel<LoginUserResponse>>,
             PipelineBehaviorWrapper<LoginUserCommand.Command, ResultModel<LoginUserResponse>>>();
+
+        services.AddScoped<IRequestHandler<ResultModel<CreateHouseResponse>>,
+            PipelineBehaviorWrapper<CreateHouseCommand.Command, ResultModel<CreateHouseResponse>>>();
 
         return services;
     }

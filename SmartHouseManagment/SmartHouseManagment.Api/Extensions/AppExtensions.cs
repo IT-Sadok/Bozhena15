@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using SmartHouseManagment.Api.Middleware;
+using SmartHouseManagment.Api.Endpoints;
 using SmartHouseManagment.Api.v1;
 using SmartHouseManagment.AppCore.Extensions;
 using SmartHouseManagment.AppCore.Models.User;
@@ -34,14 +34,14 @@ public static class AppExtensions
         using (var scope = app.Services.CreateScope())
         {
             var roleManager = scope.ServiceProvider
-                .GetRequiredService<RoleManager<IdentityRole>>();
+                .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             
             var roles = EnumExtensions.GetAllDescriptions<UserRole>();
 
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
             }
         }
     }
@@ -52,5 +52,8 @@ public static class AppExtensions
 
         apiV1.MapGroup("/users")
             .MapUserEndpoints();
+
+        apiV1.MapGroup("/houses")
+            .MapHouseManagementEndpoints();
     }
 }
