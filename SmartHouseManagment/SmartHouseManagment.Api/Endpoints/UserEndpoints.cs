@@ -4,6 +4,7 @@ using SmartHouseManagment.AppCore.Configurations;
 using SmartHouseManagment.AppCore.Extensions;
 using SmartHouseManagment.AppCore.Models.User;
 using SmartHouseManagment.AppCore.UseCases.User;
+using System.Security.Claims;
 
 namespace SmartHouseManagment.Api.v1;
 
@@ -35,7 +36,7 @@ public static class UserEndpoints
         })
         .AllowAnonymous();
 
-        group.MapPost("/createUser", async (
+        group.MapPost("/", async (
             [FromBody] RegisterUserCommand.Command request,
             IMediator mediator,
             CancellationToken cancellationToken) =>

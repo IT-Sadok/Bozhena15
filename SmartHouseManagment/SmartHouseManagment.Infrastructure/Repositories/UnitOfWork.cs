@@ -15,8 +15,8 @@ public class UnitOfWork(
     {
         try
         {
-            await contextDb.SaveChangesAsync(cancellationToken);
-            return true;
+            var result = await contextDb.SaveChangesAsync(cancellationToken);
+            return result > 0;
 
         }
         catch (Exception ex)

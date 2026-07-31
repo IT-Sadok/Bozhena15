@@ -24,7 +24,7 @@ public class HouseUserConfiguration : IEntityTypeConfiguration<HouseUser>
             .HasOne(x => x.User)
             .WithMany(x => x.HouseUsers)
             .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasOne<User>()

@@ -25,18 +25,18 @@ public class HouseConfiguration : IEntityTypeConfiguration<House>
             .HasMany(x => x.HouseUsers)
             .WithOne(x => x.House)
             .HasForeignKey(x => x.HouseId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     private void ConfigureAddress(ComplexPropertyBuilder<Address> builder)
     {
         builder
-            .Property(x => x.Street)
+            .Property(x => x.Address1)
             .IsRequired()
             .HasMaxLength(100);
 
         builder
-            .Property(x => x.Street2)
+            .Property(x => x.Address2)
             .HasMaxLength(100);
 
         builder

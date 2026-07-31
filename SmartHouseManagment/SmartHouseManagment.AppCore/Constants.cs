@@ -12,4 +12,9 @@ public static class Constants
 
         public static Error FailedSavingChanges { get; } = new("FailedSavingChanges", ErrorTypes.Conflict, "An error occurred while saving changes.");
     }
+
+    public static class ValidationErrors
+    {
+        public static string RequiredField(string fieldName) => $"{fieldName} is required.";
+    }
 }

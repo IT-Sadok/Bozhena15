@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using SmartHouseManagment.AppCore.Behaviors;
@@ -67,7 +68,11 @@ public static class ServiceExtensions
             .AddDefaultTokenProviders();
         
         services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -78,7 +83,35 @@ public static class ServiceExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration["Jwt:Secret"] ?? string.Empty))
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"❌ AUTH FAILED: {context.Exception}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine($"✅ TOKEN VALIDATED for: {context.Principal?.Identity?.Name}");
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        Console.WriteLine($"⚠️ CHALLENGE: error={context.Error}, description={context.ErrorDescription}");
+                        return Task.CompletedTask;
+                    },
+                    OnMessageReceived = context =>
+                    {
+                        var authHeader = context.Request.Headers["Authorization"].ToString();
+                        Console.WriteLine($"📩 RAW AUTH HEADER: '{authHeader}'");
+                        Console.WriteLine($"📩 PARSED TOKEN: '{context.Token}'");
+                        return Task.CompletedTask;
+                    }
+                };
             });
+
+        services.AddAuthorization();
     }
 
     private static void AddPostgreSqlDbContext<T>(
