@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartHouseManagment.Infrastructure;
@@ -12,9 +13,11 @@ using SmartHouseManagment.Infrastructure;
 namespace SmartHouseManagment.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260705214500_AddUserAndHouseTable")]
+    partial class AddUserAndHouseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,16 +171,6 @@ namespace SmartHouseManagment.Infrastructure.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<string>("Address1")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
-
-                            b1.Property<string>("Address2")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
-
                             b1.Property<string>("City")
                                 .IsRequired()
                                 .HasMaxLength(30)
@@ -192,6 +185,16 @@ namespace SmartHouseManagment.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasMaxLength(30)
                                 .HasColumnType("character varying(30)");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.Property<string>("Street2")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
 
                             b1.Property<string>("ZipCode")
                                 .IsRequired()
@@ -365,7 +368,7 @@ namespace SmartHouseManagment.Infrastructure.Migrations
                     b.HasOne("SmartHouseManagment.Domain.Entities.User", "User")
                         .WithMany("HouseUsers")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("House");
